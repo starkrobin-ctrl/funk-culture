@@ -115,7 +115,14 @@
   <h2>Kontakt</h2>
   <p>
     Booking & Anfragen:<br>
-    <a href="funkculture@gmx.de">funkculture@gmx.de</a>
+    <a href="#" id="mail-link">booking [at] funkculture.de</a>
+
+    <script>
+      const user = "booking";
+      const domain = "funkculture.de";
+      document.getElementById("mail-link").href =
+        "mailto:" + user + "@" + domain;
+    </script>
   </p>
 </section>
 
