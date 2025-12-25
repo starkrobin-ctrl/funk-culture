@@ -47,7 +47,14 @@
 
   <p>
     <strong>Kontakt</strong><br>
-    E-Mail: <a href="mailto:funkculture@gmx.de">funkculture@gmx.de</a>
+    E-Mail: <a href="#" id="mail-link">funkculture [at] gmx.de</a>
+
+    <script>
+      const user = "funkculture";
+      const domain = "gmx.de";
+      document.getElementById("mail-link").href =
+        "mailto:" + user + "@" + domain;
+    </script>
   </p>
 
   <p>
