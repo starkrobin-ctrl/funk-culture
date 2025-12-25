@@ -259,3 +259,25 @@ footer {
   background: #fff;
   color: #000;
 }
+
+.back-home {
+  margin: 2rem 0;
+}
+
+.back-home a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+}
+
+.back-home a:hover {
+  opacity: 0.7;
+}
+
+.home-icon {
+  width: 20px;
+  height: 20px;
+}
