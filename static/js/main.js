@@ -1,5 +1,5 @@
 const content = document.getElementById("content");
-const links = document.querySelectorAll(".main-nav a");
+const links = document.querySelectorAll(".nav-links a");
 
 async function loadPage(page) {
   try {
