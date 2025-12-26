@@ -281,3 +281,199 @@ footer {
   width: 20px;
   height: 20px;
 }
+
+
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.main-nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  list-style: none;
+  margin: 0;
+  padding: 1rem 2rem;
+}
+
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .main-nav ul {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+}
+
+/* Social Icons */
+.nav-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-social a {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.nav-social a:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.nav-social svg {
+  width: 22px;
+  height: 22px;
+  fill: white;
+}
+
+/* Seiten-Reiter */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .nav-inner {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.main-nav {
+  display: flex;           /* Container nebeneinander */
+  align-items: center;     /* Vertikal auf einer Höhe */
+  justify-content: space-between; /* Social links links, Nav rechts */
+  padding: 1rem 2rem;      /* optional, wie vorher */
+}
+
+/* Galerie */
+
+@media (max-width: 1024px) {
+  .gallery {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+
+footer {
+  background: #000;
+  color: #fff;
+  padding: 2rem;
+  text-align: center;
+  clear: both; /* wichtig, falls vorher float genutzt */
+}
+
+
+main, .section {
+  position: relative; /* normal flow */
+  z-index: 1;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Footer immer unten */
+}
+
+main {
+  flex: 1; /* nimmt verfügbaren Platz ein */
+}
+
+.gallery {
+  column-count: 3; /* z.B. Desktop */
+  column-gap: 1rem;
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.05);
+}
