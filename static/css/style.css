@@ -543,3 +543,27 @@ main {
     bottom: 80px;
   }
 }
+
+.scroll-down {
+  background: none;
+  border: none;
+  padding: 0;
+
+  align-self: center;
+  margin-bottom: clamp(48px, 8vh, 96px);
+
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
