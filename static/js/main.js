@@ -47,3 +47,40 @@ window.addEventListener('scroll', () => {
     scrollIcon.style.pointerEvents = 'auto';
   }
 });
+
+// Lightbox functionality for gallery
+
+const mainContent = document.getElementById('content');
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+lightbox.innerHTML = `
+  <span class="close">&times;</span>
+  <img src="" alt="">
+  <div class="caption"></div>
+`;
+document.body.appendChild(lightbox);
+
+const lightboxImg = lightbox.querySelector('img');
+const lightboxCaption = lightbox.querySelector('.caption');
+const lightboxClose = lightbox.querySelector('.close');
+
+// Klick auf Lightbox schließen
+lightboxClose.addEventListener('click', () => lightbox.classList.remove('active'));
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) lightbox.classList.remove('active');
+});
+
+// Delegierter Klick auf Gallery-Items
+mainContent.addEventListener('click', e => {
+  const galleryItem = e.target.closest('.gallery-item');
+  if (!galleryItem) return;
+
+  const img = galleryItem.querySelector('img');
+  const caption = galleryItem.dataset.caption || '';
+
+  lightboxImg.src = img.src;
+  lightboxImg.alt = img.alt;
+  lightboxCaption.textContent = caption;
+
+  lightbox.classList.add('active');
+});
