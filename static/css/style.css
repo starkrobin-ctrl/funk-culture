@@ -525,6 +525,10 @@ main {
   cursor: pointer;
 }
 
+.gallery-item .caption-content {
+  display: none; /* nur im Lightbox benutzt */
+}
+
 
 /* Scroll Down Button */
 

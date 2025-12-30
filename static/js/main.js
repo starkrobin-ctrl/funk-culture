@@ -76,11 +76,12 @@ mainContent.addEventListener('click', e => {
   if (!galleryItem) return;
 
   const img = galleryItem.querySelector('img');
-  const caption = galleryItem.dataset.caption || '';
+  const captionElem = galleryItem.querySelector('.caption-content');
+  const caption = captionElem ? captionElem.innerHTML : '';
 
   lightboxImg.src = img.src;
   lightboxImg.alt = img.alt;
-  lightboxCaption.textContent = caption;
+  lightboxCaption.innerHTML = caption;
 
   lightbox.classList.add('active');
 });
