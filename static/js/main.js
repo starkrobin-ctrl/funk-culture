@@ -36,3 +36,14 @@ document.querySelector('.scroll-down').addEventListener('click', () => {
     behavior: 'smooth'
   });
 });
+
+window.addEventListener('scroll', () => {
+  const scrollIcon = document.querySelector('.scroll-down');
+  if (window.scrollY > 50) {
+    scrollIcon.style.opacity = '0';
+    scrollIcon.style.pointerEvents = 'none';
+  } else {
+    scrollIcon.style.opacity = '1';
+    scrollIcon.style.pointerEvents = 'auto';
+  }
+});
