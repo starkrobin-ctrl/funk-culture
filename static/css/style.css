@@ -525,3 +525,14 @@ main {
 .scroll-down {
   z-index: 10;
 }
+
+/* Scroll Button Mobile Anpassung */
+
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.scroll-down {
+  bottom: calc(24px + env(safe-area-inset-bottom));
+}
