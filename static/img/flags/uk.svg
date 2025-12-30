@@ -1,0 +1,18 @@
+<!-- UK Flag SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30">
+  <clipPath id="t">
+    <path d="M0,0 v30 h60 v-30 z"></path>
+  </clipPath>
+  <clipPath id="s">
+    <path d="M30,15 h30 v15 h-30 z M0,0 h30 v15 h-30 z"></path>
+  </clipPath>
+  <g clip-path="url(#t)">
+    <rect width="60" height="30" fill="#012169"></rect>
+    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"></path>
+    <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#s)" stroke="#C8102E" stroke-width="4"></path>
+    <rect x="25" width="10" height="30" fill="#fff"></rect>
+    <rect y="10" width="60" height="10" fill="#fff"></rect>
+    <rect x="27" width="6" height="30" fill="#C8102E"></rect>
+    <rect y="12" width="60" height="6" fill="#C8102E"></rect>
+  </g>
+</svg>
