@@ -29,3 +29,10 @@ links.forEach(link => link.addEventListener("click", e => {
 
 // Initial load
 loadPage("aktuelles");
+
+// Scroll down button functionality
+document.querySelector('.scroll-down').addEventListener('click', () => {
+  document.querySelector('#content').scrollIntoView({
+    behavior: 'smooth'
+  });
+});
