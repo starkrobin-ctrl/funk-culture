@@ -534,5 +534,12 @@ main {
 }
 
 .scroll-down {
-  bottom: calc(24px + env(safe-area-inset-bottom));
+  bottom: 30px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .scroll-down {
+    bottom: 80px;
+  }
 }
