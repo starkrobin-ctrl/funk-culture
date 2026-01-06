@@ -41,13 +41,17 @@
     Funk Culture<br>
     Im Pfarrfeld 10<br>
     77652 Offenburg<br>
-    E-Mail: <a href="#" id="mail-link">funkculture [at] gmx.de</a>
+    E-Mail:     <a href="mailto:info@funkculture.de" class="mail">
+      info<span style="display:none">spam</span>@funkculture.de
+    </a>
 
     <script>
-      const user = "funkculture";
-      const domain = "gmx.de";
-      document.getElementById("mail-link").href =
-        "mailto:" + user + "@" + domain;
+      const user = "info";
+      const domain = "funkculture.de";
+      const link = document.getElementById("mail-link");
+
+      link.href = "mailto:" + user + "@" + domain;
+      link.textContent = user + "@" + domain;
     </script>
   </p>
 

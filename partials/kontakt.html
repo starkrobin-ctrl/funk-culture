@@ -2,16 +2,22 @@
   <h2>Kontakt</h2>
   <p>
     Booking & Anfragen:<br>
-    <a href="#" id="mail-link">info [at] funkculture.de</a>
+    <a href="mailto:info@funkculture.de" class="mail">
+      info<span style="display:none">spam</span>@funkculture.de
+    </a>
 
     <script>
       const user = "info";
       const domain = "funkculture.de";
-      document.getElementById("mail-link").href =
-        "mailto:" + user + "@" + domain;
+      const link = document.getElementById("mail-link");
+
+      link.href = "mailto:" + user + "@" + domain;
+      link.textContent = user + "@" + domain;
     </script>
   </p>
 </section>
+
+
 
 <footer>
   <p>
