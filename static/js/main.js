@@ -85,3 +85,11 @@ mainContent.addEventListener('click', e => {
 
   lightbox.classList.add('active');
 });
+
+function openPopup() {
+    document.getElementById("imagePopup").style.display = "block";
+}
+
+function closePopup() {
+    document.getElementById("imagePopup").style.display = "none";
+}
