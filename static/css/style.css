@@ -437,6 +437,33 @@ footer {
   }
 }
 
+.gallery-item img,
+.gallery-item video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item img:hover,
+.gallery-item video:hover {
+  transform: scale(1.05);
+}
+
+.lightbox img,
+.lightbox video {
+  max-width: 90%;
+  max-height: 70%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.close {
+  z-index: 10; /* stellt sicher, dass der Button immer anklickbar bleibt */
+}
+
 
 footer {
   background: #000;
