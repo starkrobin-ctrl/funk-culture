@@ -175,6 +175,17 @@ a {
   opacity: 0.85;
 }
 
+/* Leichter Baustein für einzelne Fade-In-Abschnitte INNERHALB
+   einer .section (z.B. pro Überschrift/Post) - bewusst ohne die
+   großen Außenabstände von section/.section */
+.fade-block {
+  margin-bottom: 3rem;
+}
+
+.fade-block:last-child {
+  margin-bottom: 0;
+}
+
 .band-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

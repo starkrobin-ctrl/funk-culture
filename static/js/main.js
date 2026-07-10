@@ -179,10 +179,17 @@ async function navigateTo(url, addToHistory = true) {
       history.pushState({ url }, '', url);
     }
 
-    // Gleiche Scroll-Höhe wie auf der vorherigen Seite beibehalten.
-    // Falls die neue Seite kürzer ist als die gemerkte Höhe, springt der
-    // Browser automatisch so weit runter wie möglich (kein Fehler).
-    window.scrollTo({ top: currentScrollY, left: 0, behavior: 'instant' });
+    // Zielposition: dort, wo auch der Hero-Scroll-Pfeil hinscrollt
+    // (Beginn von #content). Ist der Nutzer schon an dieser Stelle
+    // oder weiter unten, bleibt die aktuelle Scroll-Höhe erhalten.
+    const contentEl = pageEl.querySelector('#content');
+    const contentTop = contentEl
+      ? contentEl.getBoundingClientRect().top + window.scrollY
+      : 0;
+
+    const targetScrollY = currentScrollY > contentTop ? contentTop : currentScrollY;
+
+    window.scrollTo({ top: targetScrollY, left: 0, behavior: 'instant' });
     initPage();
   } catch (err) {
     // Fallback: normale, vollständige Navigation
