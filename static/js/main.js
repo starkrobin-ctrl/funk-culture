@@ -1,54 +1,20 @@
-const content = document.getElementById("content");
-const links = document.querySelectorAll(".nav-links a");
-const mainContent = document.getElementById('content');
+// ============================================================
+// Sanfte Seitenübergänge (PJAX): echte URLs bleiben bestehen
+// (wichtig für SEO, Direktaufruf, kein-JS), aber bei Klicks mit
+// aktivem JavaScript wird nur der Inhalt von #page ausgetauscht
+// statt die ganze Seite neu zu laden.
+// ============================================================
 
-async function loadPage(page) {
-  try {
-    const response = await fetch(`partials/${page}.html`);
-    const html = await response.text();
-    content.innerHTML = html;
-    setActiveLink(page);
-    runFadeIns();
-    initGalleryVideos();
-  } catch (err) {
-    content.innerHTML = "<p>Seite konnte nicht geladen werden.</p>";
-  }
+// Browser soll die Scroll-Position NICHT selbst wiederherstellen –
+// wir steuern das Scrollen nach jeder Navigation explizit selbst.
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
 }
 
-function setActiveLink(page) {
-  links.forEach(link => link.classList.toggle("active", link.dataset.page === page));
-}
+const pageEl = document.getElementById("page");
 
-function runFadeIns() {
-  document.querySelectorAll(".fade-in").forEach(el => el.classList.add("visible"));
-}
-
-// Klicks abfangen
-links.forEach(link => link.addEventListener("click", e => {
-  e.preventDefault();
-  loadPage(link.dataset.page);
-}));
-
-// Initial load
-loadPage("aktuelles");
-
-// Scroll down button functionality
-document.querySelector('.scroll-down').addEventListener('click', () => {
-  document.querySelector('#content').scrollIntoView({ behavior: 'smooth' });
-});
-
-window.addEventListener('scroll', () => {
-  const scrollIcon = document.querySelector('.scroll-down');
-  if (window.scrollY > 50) {
-    scrollIcon.style.opacity = '0';
-    scrollIcon.style.pointerEvents = 'none';
-  } else {
-    scrollIcon.style.opacity = '1';
-    scrollIcon.style.pointerEvents = 'auto';
-  }
-});
-
-// ---- Lightbox: EINMAL aufbauen (img + video + caption + close) ----
+// ---- Persistente Lightbox: EINMAL erstellt, überlebt jede Navigation,
+// weil sie außerhalb von #page an <body> hängt ----
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 lightbox.innerHTML = `
@@ -78,58 +44,176 @@ lightbox.addEventListener('click', e => {
   if (e.target === lightbox) closeLightbox();
 });
 
-// Delegierter Klick auf Gallery-Items (nur EIN Handler)
-mainContent.addEventListener('click', e => {
-  const galleryItem = e.target.closest('.gallery-item');
-  if (!galleryItem) return;
-
-  const media = galleryItem.querySelector('img, video');
-  const captionElem = galleryItem.querySelector('.caption-content');
-  const caption = captionElem ? captionElem.innerHTML : '';
-
-  if (media.tagName === 'VIDEO') {
-    lightboxImg.style.display = 'none';
-    lightboxImg.src = '';
-    lightboxVideo.style.display = 'block';
-    lightboxVideo.src = media.currentSrc;
-    lightboxVideo.play();
-  } else {
-    lightboxVideo.pause();
-    lightboxVideo.removeAttribute('src');
-    lightboxVideo.style.display = 'none';
-    lightboxImg.style.display = 'block';
-    lightboxImg.src = media.src;
-    lightboxImg.alt = media.alt;
-  }
-
-  lightboxCaption.innerHTML = caption;
-  lightbox.classList.add('active');
-});
-
-// Bild-Popup (Schlagzeug-Klick auf "Über uns")
+// ---- Bild-Popup (Schlagzeug-Klick auf "Über uns") ----
+// bleibt global, da per onclick="" aus dem HTML aufgerufen
 function openPopup() {
-  document.getElementById("imagePopup").style.display = "block";
+  const popup = document.getElementById("imagePopup");
+  if (popup) popup.style.display = "block";
 }
 
 function closePopup() {
-  document.getElementById("imagePopup").style.display = "none";
+  const popup = document.getElementById("imagePopup");
+  if (popup) popup.style.display = "none";
 }
+window.openPopup = openPopup;
+window.closePopup = closePopup;
 
-// Autoplay der Gallery-Videos beim Scrollen
-function initGalleryVideos() {
-  const videos = mainContent.querySelectorAll('.gallery-item video');
-  if (!videos.length) return;
+// ---- Alles, was pro Seiteninhalt neu aufgesetzt werden muss ----
+function initPage() {
+  // Aktiven Nav-Link markieren
+  const currentPage = location.pathname.split("/").pop() || "index.html";
+  pageEl.querySelectorAll(".nav-links a").forEach(link => {
+    link.classList.toggle("active", link.getAttribute("href") === currentPage);
+  });
 
-  const videoObserver = new IntersectionObserver((entries) => {
+  // Scroll-Fade-In Animation
+  const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      const video = entry.target;
       if (entry.isIntersecting) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
+        entry.target.classList.add("visible");
       }
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.01 });
 
-  videos.forEach(video => videoObserver.observe(video));
+  pageEl.querySelectorAll(".fade-in").forEach(el => {
+    el.classList.remove("visible"); // sauberer Start bei jeder Navigation
+    fadeObserver.observe(el);
+
+    const rect = el.getBoundingClientRect();
+    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+    if (isInViewport) {
+      el.classList.add("visible");
+    }
+  });
+
+  // Scroll-Down-Button (Hero ist jetzt auf jeder Seite vorhanden)
+  const scrollBtn = pageEl.querySelector('.scroll-down');
+  if (scrollBtn) {
+    scrollBtn.addEventListener('click', () => {
+      pageEl.querySelector('#content')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // Klick auf Gallery-Items öffnet die Lightbox
+  pageEl.querySelector('#content')?.addEventListener('click', e => {
+    const galleryItem = e.target.closest('.gallery-item');
+    if (!galleryItem) return;
+
+    const media = galleryItem.querySelector('img, video');
+    const captionElem = galleryItem.querySelector('.caption-content');
+    const caption = captionElem ? captionElem.innerHTML : '';
+
+    if (media.tagName === 'VIDEO') {
+      lightboxImg.style.display = 'none';
+      lightboxImg.src = '';
+      lightboxVideo.style.display = 'block';
+      lightboxVideo.src = media.currentSrc;
+      lightboxVideo.play();
+    } else {
+      lightboxVideo.pause();
+      lightboxVideo.removeAttribute('src');
+      lightboxVideo.style.display = 'none';
+      lightboxImg.style.display = 'block';
+      lightboxImg.src = media.src;
+      lightboxImg.alt = media.alt;
+    }
+
+    lightboxCaption.innerHTML = caption;
+    lightbox.classList.add('active');
+  });
+
+  // Autoplay der Gallery-Videos beim Scrollen
+  const videos = pageEl.querySelectorAll('.gallery-item video');
+  if (videos.length) {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.play().catch(() => {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.4 });
+    videos.forEach(video => videoObserver.observe(video));
+  }
 }
+
+// ---- Ein einziger, global gebundener Scroll-Handler für den
+// Scroll-Down-Button (fragt sich das aktuelle Element jedes Mal frisch) ----
+window.addEventListener('scroll', () => {
+  const scrollBtn = document.querySelector('.scroll-down');
+  if (!scrollBtn) return;
+  if (window.scrollY > 50) {
+    scrollBtn.style.opacity = '0';
+    scrollBtn.style.pointerEvents = 'none';
+  } else {
+    scrollBtn.style.opacity = '1';
+    scrollBtn.style.pointerEvents = 'auto';
+  }
+});
+
+// ============================================================
+// PJAX-Navigation
+// ============================================================
+
+async function navigateTo(url, addToHistory = true) {
+  try {
+    const currentScrollY = window.scrollY;
+
+    pageEl.classList.add('is-loading');
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Fetch fehlgeschlagen: ' + response.status);
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const newDoc = parser.parseFromString(html, 'text/html');
+    const newPage = newDoc.getElementById('page');
+    if (!newPage) throw new Error('Kein #page-Element in geladener Seite gefunden');
+
+    document.title = newDoc.title;
+    pageEl.innerHTML = newPage.innerHTML;
+    pageEl.classList.remove('is-loading');
+
+    if (addToHistory) {
+      history.pushState({ url }, '', url);
+    }
+
+    // Gleiche Scroll-Höhe wie auf der vorherigen Seite beibehalten.
+    // Falls die neue Seite kürzer ist als die gemerkte Höhe, springt der
+    // Browser automatisch so weit runter wie möglich (kein Fehler).
+    window.scrollTo({ top: currentScrollY, left: 0, behavior: 'instant' });
+    initPage();
+  } catch (err) {
+    // Fallback: normale, vollständige Navigation
+    window.location.href = url;
+  }
+}
+
+// Klicks auf interne Nav-Links abfangen
+document.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (!link) return;
+
+  const href = link.getAttribute('href');
+  if (!href) return;
+
+  // Nur eigene .html-Links im selben Ordner abfangen, keine externen/mailto/anchor Links
+  const isInternalPage = /^[a-zA-Z0-9_-]+\.html$/.test(href);
+  if (!isInternalPage) return;
+
+  // Modifizierte Klicks (Strg/Cmd/Shift/mittlere Maustaste) normal behandeln
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+  e.preventDefault();
+  if (href === location.pathname.split('/').pop()) return; // schon auf dieser Seite
+  navigateTo(href);
+});
+
+// Browser-Zurück/Vor-Buttons
+window.addEventListener('popstate', () => {
+  navigateTo(location.pathname.split('/').pop() || 'index.html', false);
+});
+
+// ---- Initialer Aufruf beim ersten Laden der Seite ----
+initPage();
