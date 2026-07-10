@@ -22,9 +22,10 @@ body {
   font-family: 'Inter', sans-serif;
   background: #0b0b0b;
   color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Footer immer unten */
 }
-
-
 
 .hero video {
   position: absolute;
@@ -77,13 +78,6 @@ h2 {
 a {
   color: #ffffff;
   text-decoration: underline;
-}
-
-footer {
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.9rem;
-  opacity: 0.6;
 }
 
 /* Mobile */
@@ -142,7 +136,6 @@ footer {
   max-width: 100%;
 }
 
-
 .video-container iframe {
   position: absolute;
   top: 0;
@@ -150,7 +143,6 @@ footer {
   width: 100%;
   height: 100%;
 }
-
 
 /* Scroll Animation */
 .fade-in {
@@ -168,6 +160,8 @@ footer {
   padding: 6rem 10%;
   background: #0b0b0b;
   color: #fff;
+  position: relative; /* normal flow */
+  z-index: 1;
 }
 
 .section h2 {
@@ -204,18 +198,18 @@ footer {
   font-size: 1.2rem;
 }
 
-.center {
-    text-align: center;
-}
-
-.justify {
-    text-align: justify;
-    hyphens: auto;
-}
-
 .member span {
   font-size: 0.9rem;
   opacity: 0.7;
+}
+
+.center {
+  text-align: center;
+}
+
+.justify {
+  text-align: justify;
+  hyphens: auto;
 }
 
 .insta-link {
@@ -289,13 +283,17 @@ footer {
   height: 20px;
 }
 
-
+/* ---- Main Navigation (nur noch EINMAL definiert) ---- */
 .main-nav {
   position: sticky;
   top: 0;
   z-index: 50;
   background: #000;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;              /* Social links links, Nav rechts */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 .main-nav ul {
@@ -321,21 +319,6 @@ footer {
 .main-nav a:hover,
 .main-nav a.active {
   opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .main-nav ul {
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-}
-
-.main-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: #000;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .nav-inner {
@@ -397,6 +380,11 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .main-nav ul {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
   .nav-inner {
     flex-direction: column;
     gap: 1rem;
@@ -409,15 +397,7 @@ footer {
   }
 }
 
-.main-nav {
-  display: flex;           /* Container nebeneinander */
-  align-items: center;     /* Vertikal auf einer Höhe */
-  justify-content: space-between; /* Social links links, Nav rechts */
-  padding: 1rem 2rem;      /* optional, wie vorher */
-}
-
-/* Galerie */
-
+/* ---- Galerie ---- */
 @media (max-width: 1024px) {
   .gallery {
     gap: 0.75rem;
@@ -437,6 +417,17 @@ footer {
   }
 }
 
+.gallery {
+  column-count: 3; /* z.B. Desktop */
+  column-gap: 1rem;
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+/* gilt für Bilder UND Videos in der Galerie */
 .gallery-item img,
 .gallery-item video {
   width: 100%;
@@ -452,74 +443,18 @@ footer {
   transform: scale(1.05);
 }
 
-.lightbox img,
-.lightbox video {
-  max-width: 90%;
-  max-height: 70%;
-  object-fit: contain;
-  border-radius: 8px;
+.gallery-item .caption-content {
+  display: none; /* nur im Lightbox benutzt */
 }
 
-.close {
-  z-index: 10; /* stellt sicher, dass der Button immer anklickbar bleibt */
-}
-
-
-footer {
-  background: #000;
-  color: #fff;
-  padding: 2rem;
-  text-align: center;
-  clear: both; /* wichtig, falls vorher float genutzt */
-}
-
-
-main, .section {
-  position: relative; /* normal flow */
-  z-index: 1;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Footer immer unten */
-}
-
-main {
-  flex: 1; /* nimmt verfügbaren Platz ein */
-}
-
-.gallery {
-  column-count: 3; /* z.B. Desktop */
-  column-gap: 1rem;
-}
-
-.gallery-item {
-  break-inside: avoid;
-  margin-bottom: 1rem;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.gallery-item img:hover {
-  transform: scale(1.05);
-}
-
-/* Lightbox Overlay */
+/* ---- Lightbox Overlay ---- */
 .lightbox {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -535,7 +470,9 @@ main {
   visibility: visible;
 }
 
-.lightbox img {
+/* gilt für Bild UND Video im Lightbox */
+.lightbox img,
+.lightbox video {
   max-width: 90%;
   max-height: 70%;
   object-fit: contain;
@@ -557,32 +494,24 @@ main {
   font-size: 2rem;
   color: #fff;
   cursor: pointer;
+  z-index: 10;
 }
 
-.gallery-item .caption-content {
-  display: none; /* nur im Lightbox benutzt */
-}
-
-
-/* Scroll Down Button */
-
+/* ---- Scroll Down Button ---- */
 .scroll-down {
   background: none;
   border: none;
   padding: 0;
   margin: 0;
-
   position: absolute;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-
   width: 32px;
   height: 32px;
-
   cursor: pointer;
+  z-index: 10;
 }
-
 
 .scroll-down::before {
   content: '';
@@ -608,28 +537,6 @@ main {
   }
 }
 
-.scroll-down {
-  background: none;
-  border: none;
-  padding: 0;
-
-  align-self: center;
-  margin-bottom: clamp(48px, 8vh, 96px);
-
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  z-index: 10;
-}
-
-/* Scroll Button Mobile Anpassung */
-
-
-.scroll-down {
-  bottom: 30px;
-}
-
-/* Mobile */
 @media (max-width: 768px) {
   .scroll-down {
     bottom: 80px;
@@ -637,84 +544,99 @@ main {
 }
 
 .clickable-word {
-    color: inherit;          /* gleiche Farbe wie normaler Text */
-    text-decoration: none;   /* keine Unterstreichung */
-    cursor: pointer;         /* trotzdem klickbar */
+  color: inherit; /* gleiche Farbe wie normaler Text */
+  text-decoration: none; /* keine Unterstreichung */
+  cursor: pointer; /* trotzdem klickbar */
 }
 
-/* Popup-Hintergrund */
+/* ---- Bild-Popup (Schlagzeug-Klick auf "Über uns") ---- */
 .popup {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* Bild im Popup */
 .popup img {
-    display: block;
-    max-width: 80%;
-    max-height: 80%;
-    margin: 5% auto;
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+  margin: 5% auto;
 }
 
-/* Schließen-Button */
+/* Schließen-Button (wird sowohl im Popup als auch im Lightbox verwendet;
+   .lightbox .close oben überschreibt diese Basis-Werte dort gezielt) */
 .close {
-    position: absolute;
-    top: 20px;
-    right: 40px;
-    font-size: 40px;
-    color: white;
-    cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
 }
 
-/* kompliziertes Instagram-Embed */
-
-.insta-post{
-  max-width:540px;
-  margin:40px auto;
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px;
-  background:rgba(255,255,255,0.1);
-  font-family:Arial, sans-serif;
-  overflow:hidden;
+/* ---- Instagram-Embed ---- */
+.insta-post {
+  max-width: 540px;
+  margin: 40px auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
-.insta-post a{
-  text-decoration:none;
-  color:white;
-  display:block;
+.insta-post a {
+  text-decoration: none;
+  color: white;
+  display: block;
 }
 
-.insta-header{
-  display:flex;
-  align-items:center;
-  padding:12px;
+.insta-header {
+  display: flex;
+  align-items: center;
+  padding: 12px;
 }
 
-.insta-header img{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  margin-right:10px;
+.insta-header img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.insta-header span{
-  font-weight:600;
-  font-size:14px;
+.insta-header span {
+  font-weight: 600;
+  font-size: 14px;
 }
 
-.insta-image{
-  width:100%;
-  display:block;
+.insta-image {
+  width: 100%;
+  display: block;
 }
 
-.insta-caption{
-  padding:12px;
-  font-size:14px;
-  line-height:1.4;
+.insta-caption {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ---- Footer ---- */
+footer {
+  background: #000;
+  color: #fff;
+  padding: 2rem;
+  text-align: center;
+  clear: both; /* wichtig, falls vorher float genutzt */
+  font-size: 0.9rem;
+}
+
+main {
+  flex: 1; /* nimmt verfügbaren Platz ein */
+  position: relative;
+  z-index: 1;
 }
