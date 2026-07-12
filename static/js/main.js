@@ -87,7 +87,7 @@ function initPage() {
         entry.target.classList.add("visible");
       }
     });
-  }, { threshold: 0.01 });
+  }, { threshold: 0.1 });
 
   pageEl.querySelectorAll(".fade-in").forEach(el => {
     el.classList.remove("visible"); // sauberer Start bei jeder Navigation
