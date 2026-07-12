@@ -13,6 +13,20 @@ if ("scrollRestoration" in history) {
 
 const pageEl = document.getElementById("page");
 
+// Berechnet die Ziel-Scroll-Position für "an den Content scrollen",
+// abzüglich der Höhe der sticky Nav-Leiste, damit diese die
+// Überschrift nicht verdeckt.
+function getContentScrollTarget() {
+  const contentEl = pageEl.querySelector('#content');
+  if (!contentEl) return 0;
+
+  const navEl = pageEl.querySelector('.main-nav');
+  const navHeight = navEl ? navEl.offsetHeight : 0;
+
+  const contentTop = contentEl.getBoundingClientRect().top + window.scrollY;
+  return Math.max(contentTop - navHeight, 0);
+}
+
 // ---- Persistente Lightbox: EINMAL erstellt, überlebt jede Navigation,
 // weil sie außerhalb von #page an <body> hängt ----
 const lightbox = document.createElement('div');
@@ -90,7 +104,7 @@ function initPage() {
   const scrollBtn = pageEl.querySelector('.scroll-down');
   if (scrollBtn) {
     scrollBtn.addEventListener('click', () => {
-      pageEl.querySelector('#content')?.scrollIntoView({ behavior: 'smooth' });
+      window.scrollTo({ top: getContentScrollTarget(), left: 0, behavior: 'smooth' });
     });
   }
 
@@ -180,12 +194,10 @@ async function navigateTo(url, addToHistory = true) {
     }
 
     // Zielposition: dort, wo auch der Hero-Scroll-Pfeil hinscrollt
-    // (Beginn von #content). Ist der Nutzer schon an dieser Stelle
-    // oder weiter unten, bleibt die aktuelle Scroll-Höhe erhalten.
-    const contentEl = pageEl.querySelector('#content');
-    const contentTop = contentEl
-      ? contentEl.getBoundingClientRect().top + window.scrollY
-      : 0;
+    // (Beginn von #content, abzüglich Nav-Höhe). Ist der Nutzer schon
+    // an dieser Stelle oder weiter unten, bleibt die aktuelle
+    // Scroll-Höhe erhalten.
+    const contentTop = getContentScrollTarget();
 
     const targetScrollY = currentScrollY > contentTop ? contentTop : currentScrollY;
 
