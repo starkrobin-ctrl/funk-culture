@@ -51,7 +51,7 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     images = [
-        p for p in INPUT_DIR.iterdir()
+        p for p in INPUT_DIR.iterdir() 
         if p.suffix.lower() in SUPPORTED_EXTENSIONS
     ]
 
@@ -61,18 +61,20 @@ def main():
 
     total_before = 0
     total_after = 0
-
+    counter = 0
     for src in sorted(images):
-        ext = ".webp" if OUTPUT_FORMAT.lower() == "webp" else ".jpg"
-        dst = OUTPUT_DIR / (src.stem + ext)
+        if "Maximilian" in src.stem: 
+            ext = ".webp" if OUTPUT_FORMAT.lower() == "webp" else ".jpg"
+            dst = OUTPUT_DIR / ("MaxiBrunnen" + f"{counter}" + ext)
 
-        before, after = compress_image(src, dst)
-        total_before += before
-        total_after += after
+            before, after = compress_image(src, dst)
+            total_before += before
+            total_after += after
 
-        saved_pct = 100 * (1 - after / before) if before else 0
-        print(f"{src.name:30s} {before/1024:8.1f} KB -> {after/1024:8.1f} KB "
-              f"({saved_pct:.0f}% kleiner)")
+            saved_pct = 100 * (1 - after / before) if before else 0
+            print(f"{src.name:30s} {before/1024:8.1f} KB -> {after/1024:8.1f} KB "
+                f"({saved_pct:.0f}% kleiner)")
+            counter += 1
 
     print("\n---")
     print(f"Gesamt vorher:  {total_before/1024/1024:.2f} MB")
