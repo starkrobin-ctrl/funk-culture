@@ -33,14 +33,18 @@ const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 lightbox.innerHTML = `
   <span class="close">&times;</span>
-  <img src="" alt="">
-  <video muted loop playsinline style="display:none;"></video>
+  <div class="lightbox-media">
+    <img src="" alt="">
+    <video muted loop playsinline style="display:none;"></video>
+    <button type="button" class="mute-toggle" style="display:none;" aria-label="Ton einschalten">🔇</button>
+  </div>
   <div class="caption"></div>
 `;
 document.body.appendChild(lightbox);
 
 const lightboxImg = lightbox.querySelector('img');
 const lightboxVideo = lightbox.querySelector('video');
+const muteToggleBtn = lightbox.querySelector('.mute-toggle');
 const lightboxCaption = lightbox.querySelector('.caption');
 const lightboxClose = lightbox.querySelector('.close');
 
@@ -51,11 +55,24 @@ function closeLightbox() {
   lightboxVideo.load();
   lightboxVideo.style.display = 'none';
   lightboxImg.style.display = 'block';
+  muteToggleBtn.style.display = 'none';
 }
 
 lightboxClose.addEventListener('click', closeLightbox);
 lightbox.addEventListener('click', e => {
   if (e.target === lightbox) closeLightbox();
+});
+
+// Ton der Lightbox-Videos an-/ausschalten
+function updateMuteIcon() {
+  muteToggleBtn.textContent = lightboxVideo.muted ? '🔇' : '🔊';
+  muteToggleBtn.setAttribute('aria-label', lightboxVideo.muted ? 'Ton einschalten' : 'Ton ausschalten');
+}
+
+muteToggleBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  lightboxVideo.muted = !lightboxVideo.muted;
+  updateMuteIcon();
 });
 
 // ---- Bild-Popup (Schlagzeug-Klick auf "Über uns") ----
@@ -123,6 +140,8 @@ function initPage() {
       lightboxVideo.style.display = 'block';
       lightboxVideo.src = media.currentSrc;
       lightboxVideo.play();
+      muteToggleBtn.style.display = 'flex';
+      updateMuteIcon();
     } else {
       lightboxVideo.pause();
       lightboxVideo.removeAttribute('src');
@@ -130,6 +149,7 @@ function initPage() {
       lightboxImg.style.display = 'block';
       lightboxImg.src = media.src;
       lightboxImg.alt = media.alt;
+      muteToggleBtn.style.display = 'none';
     }
 
     lightboxCaption.innerHTML = caption;
