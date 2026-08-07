@@ -75,6 +75,70 @@ muteToggleBtn.addEventListener('click', e => {
   updateMuteIcon();
 });
 
+// ============================================================
+// Kontaktformular (EmailJS)
+// ============================================================
+// Das EmailJS-SDK wird nur auf kontakt.html per <script> im <head>
+// geladen. Auf allen anderen Seiten existiert "emailjs" nicht - daher
+// hier defensiv prüfen, bevor initialisiert wird.
+//
+// ACHTUNG: Vor dem Livegang bei EmailJS (emailjs.com) registrieren und
+// die drei Platzhalter unten ersetzen:
+//   - EMAILJS_PUBLIC_KEY  -> Account > General > Public Key
+//   - EMAILJS_SERVICE_ID  -> Email Services > eure verbundene Adresse
+//   - EMAILJS_TEMPLATE_ID -> Email Templates > euer Template
+// Im Template müssen die Variablen {{firstname}}, {{lastname}},
+// {{email}} und {{message}} vorkommen (Feldnamen aus dem Formular).
+// Tipp: im Template das Feld "Reply To" auf {{email}} setzen, dann
+// könnt ihr in eurem Postfach direkt auf die Anfrage antworten.
+const EMAILJS_PUBLIC_KEY = "5OD4nj6p9UDb61cDX";
+const EMAILJS_SERVICE_ID = "service_4ntip0c";
+const EMAILJS_TEMPLATE_ID = "template_pgmpn2s";
+
+if (typeof emailjs !== "undefined") {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+function initContactForm() {
+  const form = pageEl.querySelector('#contact-form');
+  if (!form) return;
+
+  const statusEl = form.querySelector('.form-status');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Honeypot: wenn das versteckte Feld ausgefüllt ist, war es
+    // vermutlich ein Bot - stillschweigend abbrechen
+    if (form.website && form.website.value) return;
+
+    if (typeof emailjs === "undefined") {
+      statusEl.textContent = "Das Formular ist gerade nicht verfügbar. Schreib uns gern direkt per Mail.";
+      statusEl.className = "form-status error";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    statusEl.textContent = "Wird gesendet …";
+    statusEl.className = "form-status";
+
+    emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
+      .then(() => {
+        statusEl.textContent = "Danke! Deine Nachricht wurde verschickt.";
+        statusEl.className = "form-status success";
+        form.reset();
+      })
+      .catch(() => {
+        statusEl.textContent = "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.";
+        statusEl.className = "form-status error";
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+      });
+  });
+}
+
 // ---- Bild-Popup (Schlagzeug-Klick auf "Über uns") ----
 // bleibt global, da per onclick="" aus dem HTML aufgerufen
 function openPopup() {
@@ -155,6 +219,9 @@ function initPage() {
     lightboxCaption.innerHTML = caption;
     lightbox.classList.add('active');
   });
+
+  // Kontaktformular (nur auf kontakt.html vorhanden)
+  initContactForm();
 
   // Autoplay der Gallery-Videos beim Scrollen
   const videos = pageEl.querySelectorAll('.gallery-item video');

@@ -684,3 +684,95 @@ main {
   position: relative;
   z-index: 1;
 }
+
+/* ==========================================================
+   Kontaktformular (an das Ende von style.css anfügen)
+   ========================================================== */
+
+.contact-form {
+  max-width: 480px;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+}
+
+.contact-form input,
+.contact-form textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #fff;
+}
+
+.contact-form button {
+  align-self: flex-start;
+  cursor: pointer;
+  background: none;
+}
+
+.contact-form button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.form-status {
+  min-height: 1.2em;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.form-status.success {
+  color: #6ee7a0;
+}
+
+.form-status.error {
+  color: #ff8a8a;
+}
+
+/* Honeypot-Feld: für echte Besucher unsichtbar, Bots füllen es oft
+   trotzdem aus - siehe main.js */
+.honeypot-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
