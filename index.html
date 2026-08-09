@@ -54,10 +54,10 @@
     </a>
   </div>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">Aktuelles</a></li>
-    <li><a href="ueber-uns.html">Über uns</a></li>
-    <li><a href="galerie.html">Galerie</a></li>
-    <li><a href="kontakt.html">Kontakt</a></li>
+    <li><a href="index.html#content" class="active">Aktuelles</a></li>
+    <li><a href="ueber-uns.html#content">Über uns</a></li>
+    <li><a href="galerie.html#content">Galerie</a></li>
+    <li><a href="kontakt.html#content">Kontakt</a></li>
   </ul>
 </nav>
 
@@ -78,12 +78,23 @@
         Unser Promovideo, mit den Klassikern aus dem Programm, frisch aus der Klimperstube.
       </p>
       <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/a46TNipZiqs?si=2uZBF7nvZ9ecH_J5"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-        </iframe>
+        <button
+          type="button"
+          class="youtube-facade"
+          data-video-id="a46TNipZiqs"
+          data-video-title="YouTube video player"
+          aria-label="Video laden und abspielen: Promovideo Funk Culture"
+        >
+          <img
+            class="youtube-facade-thumb"
+            src="https://i.ytimg.com/vi/a46TNipZiqs/hqdefault.jpg"
+            alt=""
+            loading="lazy"
+          >
+          <span class="youtube-facade-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+        </button>
       </div>
     </div>
 

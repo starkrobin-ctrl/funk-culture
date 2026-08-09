@@ -76,28 +76,19 @@ muteToggleBtn.addEventListener('click', e => {
 });
 
 // ============================================================
-// Kontaktformular (EmailJS)
+// Kontaktformular (Web3Forms)
 // ============================================================
-// Das EmailJS-SDK wird nur auf kontakt.html per <script> im <head>
-// geladen. Auf allen anderen Seiten existiert "emailjs" nicht - daher
-// hier defensiv prüfen, bevor initialisiert wird.
+// Web3Forms braucht keine eigene SMTP-Anmeldung bei eurem Postfach -
+// die verschicken die Mail über ihre eigene Infrastruktur direkt an
+// eure Empfangsadresse. GMX muss also nur ganz normal E-Mails
+// EMPFANGEN können, nicht als Absender AUTHENTIFIZIERT werden - genau
+// das Problem, das uns mit EmailJS + GMX-SMTP Ärger gemacht hat, fällt
+// damit weg.
 //
-// ACHTUNG: Vor dem Livegang bei EmailJS (emailjs.com) registrieren und
-// die drei Platzhalter unten ersetzen:
-//   - EMAILJS_PUBLIC_KEY  -> Account > General > Public Key
-//   - EMAILJS_SERVICE_ID  -> Email Services > eure verbundene Adresse
-//   - EMAILJS_TEMPLATE_ID -> Email Templates > euer Template
-// Im Template müssen die Variablen {{firstname}}, {{lastname}},
-// {{email}} und {{message}} vorkommen (Feldnamen aus dem Formular).
-// Tipp: im Template das Feld "Reply To" auf {{email}} setzen, dann
-// könnt ihr in eurem Postfach direkt auf die Anfrage antworten.
-const EMAILJS_PUBLIC_KEY = "5OD4nj6p9UDb61cDX";
-const EMAILJS_SERVICE_ID = "service_4ntip0c";
-const EMAILJS_TEMPLATE_ID = "template_pgmpn2s";
-
-if (typeof emailjs !== "undefined") {
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-}
+// ACHTUNG: Vor dem Livegang auf https://web3forms.com eure GMX-Adresse
+// eintragen, den per Mail zugeschickten Access Key kopieren und hier
+// eintragen:
+const WEB3FORMS_ACCESS_KEY = "WEB3FORMS_ACCESS_KEY";
 
 function initContactForm() {
   const form = pageEl.querySelector('#contact-form');
@@ -106,36 +97,75 @@ function initContactForm() {
   const statusEl = form.querySelector('.form-status');
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
 
     // Honeypot: wenn das versteckte Feld ausgefüllt ist, war es
     // vermutlich ein Bot - stillschweigend abbrechen
     if (form.website && form.website.value) return;
 
-    if (typeof emailjs === "undefined") {
-      statusEl.textContent = "Das Formular ist gerade nicht verfügbar. Schreib uns gern direkt per Mail.";
-      statusEl.className = "form-status error";
-      return;
-    }
-
     submitBtn.disabled = true;
     statusEl.textContent = "Wird gesendet …";
     statusEl.className = "form-status";
 
-    emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
-      .then(() => {
-        statusEl.textContent = "Danke! Deine Nachricht wurde verschickt.";
-        statusEl.className = "form-status success";
-        form.reset();
-      })
-      .catch(() => {
-        statusEl.textContent = "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.";
-        statusEl.className = "form-status error";
-      })
-      .finally(() => {
-        submitBtn.disabled = false;
+    const formData = new FormData(form);
+    formData.append('access_key', WEB3FORMS_ACCESS_KEY);
+    formData.append('subject', 'Neue Anfrage über die Website');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData
       });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Web3Forms-Anfrage fehlgeschlagen');
+      }
+
+      statusEl.textContent = "Danke! Deine Nachricht wurde verschickt.";
+      statusEl.className = "form-status success";
+      form.reset();
+    } catch (err) {
+      statusEl.textContent = "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.";
+      statusEl.className = "form-status error";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+// ============================================================
+// YouTube-Videos: Zwei-Klick-Lösung (datenschutzfreundlich)
+// ============================================================
+// Statt das YouTube-<iframe> direkt beim Seitenaufruf zu laden (und
+// damit sofort eine Verbindung zu Google herzustellen), zeigen wir nur
+// ein Vorschaubild mit Play-Button. Erst der aktive Klick baut das
+// echte iframe (auf youtube-nocookie.com) ein - das entspricht einer
+// Einwilligung durch aktive Handlung, wie sie DSGVO/TTDSG hier
+// vorsehen. Siehe Datenschutzerklärung, Abschnitt "YouTube-Videos".
+function initYoutubeFacades() {
+  pageEl.querySelectorAll('.youtube-facade').forEach(facade => {
+    facade.addEventListener('click', () => {
+      const videoId = facade.dataset.videoId;
+      if (!videoId) return;
+      const title = facade.dataset.videoTitle || 'YouTube video player';
+
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+      iframe.title = title;
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute(
+        'allow',
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+      );
+      iframe.allowFullscreen = true;
+
+      const container = facade.closest('.video-container') || facade.parentElement;
+      container.innerHTML = '';
+      container.appendChild(iframe);
+    }, { once: true });
   });
 }
 
@@ -222,6 +252,9 @@ function initPage() {
 
   // Kontaktformular (nur auf kontakt.html vorhanden)
   initContactForm();
+
+  // YouTube-Vorschaubilder (Zwei-Klick-Lösung)
+  initYoutubeFacades();
 
   // Autoplay der Gallery-Videos beim Scrollen
   const videos = pageEl.querySelectorAll('.gallery-item video');
