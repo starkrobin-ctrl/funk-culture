@@ -13,6 +13,13 @@ if ("scrollRestoration" in history) {
 
 const pageEl = document.getElementById("page");
 
+// ---------------------------------------------------------------------
+// GALERIE-SEED: Diese Zahl bestimmt die Reihenfolge der Galerie-Bilder
+// und -Videos. Einfach eine andere Zahl eintragen, Seite neu laden und
+// schauen, ob dir die neue Anordnung besser gefällt.
+// ---------------------------------------------------------------------
+const GALLERY_SEED = 38;
+
 // Berechnet die Ziel-Scroll-Position für "an den Content scrollen",
 // abzüglich der Höhe der sticky Nav-Leiste, damit diese die
 // Überschrift nicht verdeckt.
@@ -88,7 +95,7 @@ muteToggleBtn.addEventListener('click', e => {
 // ACHTUNG: Vor dem Livegang auf https://web3forms.com eure GMX-Adresse
 // eintragen, den per Mail zugeschickten Access Key kopieren und hier
 // eintragen:
-const WEB3FORMS_ACCESS_KEY = "d29182cd-afea-407f-8273-24599b148723";
+const WEB3FORMS_ACCESS_KEY = "WEB3FORMS_ACCESS_KEY";
 
 function initContactForm() {
   const form = pageEl.querySelector('#contact-form');
@@ -161,12 +168,50 @@ function initYoutubeFacades() {
         'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
       );
       iframe.allowFullscreen = true;
+      iframe.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; border:none;';
 
       const container = facade.closest('.video-container') || facade.parentElement;
       container.innerHTML = '';
       container.appendChild(iframe);
     }, { once: true });
   });
+}
+
+// ============================================================
+// Reproduzierbare Zufalls-Reihenfolge für die Galerie
+// ============================================================
+// mulberry32: kleiner, schneller seeded PRNG. Gleicher Seed => immer
+// exakt dieselbe Reihenfolge. GALLERY_SEED oben im Code ändern und
+// Seite neu laden, um andere Anordnungen durchzuprobieren.
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffleSeeded(array, seed) {
+  const rand = mulberry32(seed);
+  const result = array.slice();
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function shuffleGalleryDOM() {
+  const gallery = pageEl.querySelector(".gallery");
+  if (!gallery) return;
+  const items = Array.from(gallery.children);
+  const shuffled = shuffleSeeded(items, GALLERY_SEED);
+  // appendChild auf ein bereits im DOM befindliches Element verschiebt
+  // es nur (kein Klonen), Event-Listener etc. bleiben erhalten
+  shuffled.forEach(item => gallery.appendChild(item));
 }
 
 // ---- Bild-Popup (Schlagzeug-Klick auf "Über uns") ----
@@ -255,6 +300,9 @@ function initPage() {
 
   // YouTube-Vorschaubilder (Zwei-Klick-Lösung)
   initYoutubeFacades();
+
+  // Galerie-Reihenfolge (reproduzierbarer Zufall, nur falls .gallery existiert)
+  shuffleGalleryDOM();
 
   // Autoplay der Gallery-Videos beim Scrollen
   const videos = pageEl.querySelectorAll('.gallery-item video');
