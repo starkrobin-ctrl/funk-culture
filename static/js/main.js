@@ -88,7 +88,7 @@ muteToggleBtn.addEventListener('click', e => {
 // ACHTUNG: Vor dem Livegang auf https://web3forms.com eure GMX-Adresse
 // eintragen, den per Mail zugeschickten Access Key kopieren und hier
 // eintragen:
-const WEB3FORMS_ACCESS_KEY = "WEB3FORMS_ACCESS_KEY";
+const WEB3FORMS_ACCESS_KEY = "d29182cd-afea-407f-8273-24599b148723";
 
 function initContactForm() {
   const form = pageEl.querySelector('#contact-form');
