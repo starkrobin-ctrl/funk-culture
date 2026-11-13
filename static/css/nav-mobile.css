@@ -1,0 +1,78 @@
+/* ============================================================
+   Mobiles Menü (Hamburger-Button)
+   Wird NACH style.css geladen. Alles, was den Button betrifft,
+   greift nur unterhalb des Breakpoints - die Desktop-Ansicht
+   bleibt unverändert (der Button ist dort ausgeblendet).
+   ============================================================ */
+
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Zeile 1: Social-Icons + Sprachumschalter links, Button rechts.
+     Zeile 2 (nur wenn geöffnet): die Menüpunkte untereinander. */
+  .main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    margin: 0 8px 0 auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+
+  /* Geöffnet: drei Striche werden zum X */
+  .main-nav.open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .main-nav.open .nav-toggle span:nth-child(2) { opacity: 0; }
+  .main-nav.open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Menüpunkte: standardmäßig eingeklappt */
+  .main-nav .nav-links {
+    display: none;
+    flex: 0 0 100%;
+    order: 3;
+    flex-direction: column;
+    margin: 0;
+    padding: 0 0 8px;
+    list-style: none;
+    text-align: center;
+  }
+
+  .main-nav.open .nav-links {
+    display: flex;
+  }
+
+  .main-nav .nav-links li {
+    width: 100%;
+    margin: 0;
+  }
+
+  .main-nav .nav-links a {
+    display: block;
+    padding: 14px 20px;
+  }
+}

@@ -6,6 +6,7 @@
   <meta name="description" content="Booking-Anfragen und Kontakt zur Funk-Band Funk Culture aus Freiburg.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/nav-mobile.css">
 
   <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
   <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg">
@@ -58,10 +59,14 @@
     </a>
     <div class="lang-switch" role="group" aria-label="Sprache wählen">
       <span class="current" lang="de" aria-current="true">DE</span>
+      <span class="sep" aria-hidden="true">|</span>
       <a href="en/contact.html" lang="en" hreflang="en" aria-label="English version">EN</a>
     </div>
   </div>
-  <ul class="nav-links">
+  <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-menu">
     <li><a href="index.html">Aktuelles</a></li>
     <li><a href="ueber-uns.html">Über uns</a></li>
     <li><a href="galerie.html">Galerie</a></li>

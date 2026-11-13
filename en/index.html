@@ -6,6 +6,7 @@
   <meta name="description" content="Funk Culture is a seven-piece funk band from Freiburg, Germany. Find current dates, gigs and news here.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/nav-mobile.css">
 
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="96x96" href="../favicon/favicon-96x96.png">
@@ -60,10 +61,14 @@
     </a>
     <div class="lang-switch" role="group" aria-label="Choose language">
       <a href="../index.html" lang="de" hreflang="de" aria-label="Deutsche Version">DE</a>
+      <span class="sep" aria-hidden="true">|</span>
       <span class="current" lang="en" aria-current="true">EN</span>
     </div>
   </div>
-  <ul class="nav-links">
+  <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-menu">
     <li><a href="index.html" class="active">News</a></li>
     <li><a href="about.html">About us</a></li>
     <li><a href="gallery.html">Gallery</a></li>
@@ -114,7 +119,7 @@
       </p>
 
       <div class="insta-post">
-        <a href="https://www.instagram.com/p/DbLcMTsjNAz/" target="_blank">
+        <a href="https://www.instagram.com/p/DZrbW2Hsm8n/" target="_blank">
           <div class="insta-header">
             <img src="../static/img/profile.webp" alt="Funk Culture">
             <span>funkculture_music</span>

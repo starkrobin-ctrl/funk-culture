@@ -24,6 +24,8 @@ const I18N = {
   de: {
     muteOn: "Ton einschalten",
     muteOff: "Ton ausschalten",
+    menuOpen: "Menü öffnen",
+    menuClose: "Menü schließen",
     sending: "Wird gesendet …",
     success: "Danke! Deine Nachricht wurde verschickt.",
     error: "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.",
@@ -33,6 +35,8 @@ const I18N = {
   en: {
     muteOn: "Turn sound on",
     muteOff: "Turn sound off",
+    menuOpen: "Open menu",
+    menuClose: "Close menu",
     sending: "Sending …",
     success: "Thank you! Your message has been sent.",
     error: "Sorry, something went wrong. Feel free to email us directly.",
@@ -435,6 +439,41 @@ document.addEventListener('click', e => {
 // Browser-Zurück/Vor-Buttons
 window.addEventListener('popstate', () => {
   navigateTo(location.pathname.split('/').pop() || 'index.html', false);
+});
+
+// ============================================================
+// Mobiles Menü (Hamburger-Button)
+// ============================================================
+// Die Navigation liegt in #page und wird bei jedem PJAX-Seitenwechsel
+// neu eingesetzt (dann startet sie automatisch geschlossen). Darum
+// hängen die Handler am document statt am Button selbst.
+function setNavOpen(nav, open) {
+  nav.classList.toggle('open', open);
+  const btn = nav.querySelector('.nav-toggle');
+  if (btn) {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? t('menuClose') : t('menuOpen'));
+  }
+}
+
+document.addEventListener('click', e => {
+  const toggle = e.target.closest('.nav-toggle');
+  if (toggle) {
+    const nav = toggle.closest('.main-nav');
+    if (nav) setNavOpen(nav, !nav.classList.contains('open'));
+    return;
+  }
+  // Klick auf einen Menüpunkt oder irgendwo außerhalb der Nav schließt das Menü
+  const openNav = document.querySelector('.main-nav.open');
+  if (openNav && (e.target.closest('.nav-links a') || !e.target.closest('.main-nav'))) {
+    setNavOpen(openNav, false);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const openNav = document.querySelector('.main-nav.open');
+  if (openNav) setNavOpen(openNav, false);
 });
 
 // ---- Initialer Aufruf beim ersten Laden der Seite ----
