@@ -1,19 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://funkculture.de/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/"/>
+  </url>
+  <url>
+    <loc>https://funkculture.de/en/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/"/>
   </url>
   <url>
     <loc>https://funkculture.de/galerie.html</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/galerie.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/gallery.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/galerie.html"/>
+  </url>
+  <url>
+    <loc>https://funkculture.de/en/gallery.html</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/galerie.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/gallery.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/galerie.html"/>
   </url>
   <url>
     <loc>https://funkculture.de/ueber-uns.html</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/ueber-uns.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/ueber-uns.html"/>
+  </url>
+  <url>
+    <loc>https://funkculture.de/en/about.html</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/ueber-uns.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/ueber-uns.html"/>
   </url>
   <url>
     <loc>https://funkculture.de/kontakt.html</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/kontakt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/kontakt.html"/>
+  </url>
+  <url>
+    <loc>https://funkculture.de/en/contact.html</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://funkculture.de/kontakt.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://funkculture.de/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://funkculture.de/kontakt.html"/>
   </url>
 </urlset>

@@ -13,6 +13,39 @@ if ("scrollRestoration" in history) {
 
 const pageEl = document.getElementById("page");
 
+// ============================================================
+// Texte pro Sprache (DE/EN)
+// ============================================================
+// Die Sprache wird aus <html lang="..."> gelesen. Die englischen Seiten
+// (Ordner /en/) haben lang="en", alle anderen Seiten lang="de".
+// Der Sprachwechsel (DE | EN) ist eine normale, vollständige
+// Navigation, daher reicht es, die Sprache bei Bedarf frisch abzufragen.
+const I18N = {
+  de: {
+    muteOn: "Ton einschalten",
+    muteOff: "Ton ausschalten",
+    sending: "Wird gesendet …",
+    success: "Danke! Deine Nachricht wurde verschickt.",
+    error: "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.",
+    // Betreff der Mail, die bei euch ankommt (bleibt für euch deutsch)
+    subject: "Neue Anfrage über die Website"
+  },
+  en: {
+    muteOn: "Turn sound on",
+    muteOff: "Turn sound off",
+    sending: "Sending …",
+    success: "Thank you! Your message has been sent.",
+    error: "Sorry, something went wrong. Feel free to email us directly.",
+    // Betreff der Mail, die bei euch ankommt: Hinweis, dass sie über die englische Seite kam
+    subject: "Neue Anfrage über die Website (EN)"
+  }
+};
+
+function t(key) {
+  const lang = document.documentElement.lang === "en" ? "en" : "de";
+  return I18N[lang][key];
+}
+
 // ---------------------------------------------------------------------
 // GALERIE-SEED: Diese Zahl bestimmt die Reihenfolge der Galerie-Bilder
 // und -Videos. Einfach eine andere Zahl eintragen, Seite neu laden und
@@ -43,7 +76,7 @@ lightbox.innerHTML = `
   <div class="lightbox-media">
     <img src="" alt="">
     <video muted loop playsinline style="display:none;"></video>
-    <button type="button" class="mute-toggle" style="display:none;" aria-label="Ton einschalten">🔇</button>
+    <button type="button" class="mute-toggle" style="display:none;" aria-label="${t('muteOn')}">🔇</button>
   </div>
   <div class="caption"></div>
 `;
@@ -73,7 +106,7 @@ lightbox.addEventListener('click', e => {
 // Ton der Lightbox-Videos an-/ausschalten
 function updateMuteIcon() {
   muteToggleBtn.textContent = lightboxVideo.muted ? '🔇' : '🔊';
-  muteToggleBtn.setAttribute('aria-label', lightboxVideo.muted ? 'Ton einschalten' : 'Ton ausschalten');
+  muteToggleBtn.setAttribute('aria-label', lightboxVideo.muted ? t('muteOn') : t('muteOff'));
 }
 
 muteToggleBtn.addEventListener('click', e => {
@@ -112,12 +145,12 @@ function initContactForm() {
     if (form.website && form.website.value) return;
 
     submitBtn.disabled = true;
-    statusEl.textContent = "Wird gesendet …";
+    statusEl.textContent = t('sending');
     statusEl.className = "form-status";
 
     const formData = new FormData(form);
     formData.append('access_key', WEB3FORMS_ACCESS_KEY);
-    formData.append('subject', 'Neue Anfrage über die Website');
+    formData.append('subject', t('subject'));
 
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
@@ -128,14 +161,14 @@ function initContactForm() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Web3Forms-Anfrage fehlgeschlagen');
+        throw new Error(result.message || 'Web3Forms request failed');
       }
 
-      statusEl.textContent = "Danke! Deine Nachricht wurde verschickt.";
+      statusEl.textContent = t('success');
       statusEl.className = "form-status success";
       form.reset();
     } catch (err) {
-      statusEl.textContent = "Da ist leider etwas schiefgelaufen. Schreib uns gern direkt per Mail.";
+      statusEl.textContent = t('error');
       statusEl.className = "form-status error";
     } finally {
       submitBtn.disabled = false;
@@ -295,7 +328,7 @@ function initPage() {
     lightbox.classList.add('active');
   });
 
-  // Kontaktformular (nur auf kontakt.html vorhanden)
+  // Kontaktformular (nur auf kontakt.html / contact.html vorhanden)
   initContactForm();
 
   // YouTube-Vorschaubilder (Zwei-Klick-Lösung)
@@ -385,7 +418,9 @@ document.addEventListener('click', e => {
   const href = link.getAttribute('href');
   if (!href) return;
 
-  // Nur eigene .html-Links im selben Ordner abfangen, keine externen/mailto/anchor Links
+  // Nur eigene .html-Links im selben Ordner abfangen, keine externen/mailto/anchor Links.
+  // Der Sprachwechsel (en/xyz.html bzw. ../xyz.html) passt bewusst NICHT auf
+  // dieses Muster und läuft deshalb als normale, vollständige Navigation.
   const isInternalPage = /^[a-zA-Z0-9_-]+\.html$/.test(href);
   if (!isInternalPage) return;
 
